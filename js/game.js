@@ -3,6 +3,7 @@ import { Enemy } from './enemy.js';
 import { Level } from './level.js';
 import { Utils } from './utils.js';
 import { AssetLoader } from './assetLoader.js';
+import { THEMES, LEVEL_BACKGROUNDS, LEVEL_TILES } from './constants.js';
 
 export class Game {
     constructor(uiManager) {
@@ -57,12 +58,30 @@ export class Game {
         this.assets.loadImage('player', 'assets/images/png 2/Idle__000.png');
         this.assets.loadImage('playerRun', 'assets/images/png 2/Run__000.png');
         this.assets.loadImage('playerJump', 'assets/images/png 2/Jump__000.png');
-        this.assets.loadImage('background', 'assets/images/freetileset/png/BG/BG.png');
-        this.assets.loadImage('ground', 'assets/images/freetileset/png/Tiles/2.png');
-        this.assets.loadImage('brick', 'assets/images/freetileset/png/Tiles/14.png');
+        
+        // Load backgrounds
+        for (let i = 0; i < LEVEL_BACKGROUNDS.length; i++) {
+            if (LEVEL_BACKGROUNDS[i]) {
+                this.assets.loadImage(`background_${i}`, LEVEL_BACKGROUNDS[i]);
+            }
+        }
+        
+        // Load tileset images for each theme
+        for (let theme = 0; theme < LEVEL_TILES.length; theme++) {
+            const tileset = LEVEL_TILES[theme];
+            if (tileset) {
+                if (tileset.ground) this.assets.loadImage(`ground_${theme}`, tileset.ground);
+                if (tileset.brick) this.assets.loadImage(`brick_${theme}`, tileset.brick);
+                if (tileset.spike) this.assets.loadImage(`spike_${theme}`, tileset.spike);
+                if (tileset.quicksand) this.assets.loadImage('quicksand', tileset.quicksand);
+                if (tileset.cactus) this.assets.loadImage('cactus', tileset.cactus);
+                if (tileset.ice) this.assets.loadImage('ice', tileset.ice);
+            }
+        }
+        
+        // Load common images
         this.assets.loadImage('coin', 'assets/images/freetileset/png/Tiles/17.png');
         this.assets.loadImage('flag', 'assets/images/freetileset/png/Object/Sign_1.png');
-        this.assets.loadImage('spike', 'assets/images/freetileset/png/Tiles/16.png');
         this.assets.loadImage('enemy', 'assets/images/freetileset/png/Object/Mushroom_1.png');
         this.assets.loadImage('powerupSpeed', 'assets/images/freetileset/png/Object/Bush (1).png');
         this.assets.loadImage('powerupJump', 'assets/images/freetileset/png/Object/Bush (2).png');
@@ -123,9 +142,13 @@ export class Game {
             // Clear canvas
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            // Draw background
-            if (this.assets.images.background) {
-                this.ctx.drawImage(this.assets.images.background, 0, 0, this.canvas.width, this.canvas.height);
+            // Draw background based on theme
+            const theme = this.level.theme || THEMES.GRASSLAND;
+            const backgroundImg = this.assets.images[`background_${theme}`];
+            if (backgroundImg) {
+                this.ctx.drawImage(backgroundImg, 0, 0, this.canvas.width, this.canvas.height);
+            } else if (this.assets.images.background_0) {
+                this.ctx.drawImage(this.assets.images.background_0, 0, 0, this.canvas.width, this.canvas.height);
             }
 
             // Update
@@ -139,6 +162,9 @@ export class Game {
             this.level.draw();
             this.player.draw();
             this.enemies.forEach(enemy => enemy.draw());
+            
+            // Draw special effects based on level theme
+            this.drawLevelEffects();
         } else if (this.gameState === 'loading') {
             // Draw loading screen
             this.ctx.fillStyle = '#000';
@@ -150,6 +176,53 @@ export class Game {
         }
 
         requestAnimationFrame(() => this.gameLoop());
+    }
+    
+    drawLevelEffects() {
+        if (!this.level) return;
+        
+        const theme = this.level.theme;
+        
+        // Desert sandstorm effect
+        if (theme === THEMES.DESERT && this.gameTime % 180 < 90) {
+            this.ctx.fillStyle = 'rgba(244, 164, 96, 0.2)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            
+            // Draw sand particles
+            this.ctx.fillStyle = 'rgba(244, 164, 96, 0.5)';
+            for (let i = 0; i < 20; i++) {
+                const x = (Math.sin(this.gameTime * 0.05 + i) * 100 + this.gameTime * 2 + i * 50) % this.canvas.width;
+                const y = (Math.cos(this.gameTime * 0.05 + i) * 50 + i * 20) % this.canvas.height;
+                this.ctx.fillRect(x, y, 2, 2);
+            }
+        }
+        
+        // Ice cave effect
+        if (theme === THEMES.ICE) {
+            // Draw falling snowflakes
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            for (let i = 0; i < 30; i++) {
+                const x = (Math.sin(this.gameTime * 0.01 + i) * 200 + i * 30) % this.canvas.width;
+                const y = (this.gameTime + i * 20) % this.canvas.height;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 1, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+        
+        // Volcano effect
+        if (theme === THEMES.VOLCANO) {
+            // Draw smoke particles
+            this.ctx.fillStyle = 'rgba(100, 100, 100, 0.3)';
+            for (let i = 0; i < 15; i++) {
+                const x = (Math.sin(this.gameTime * 0.02 + i) * 150 + i * 40) % this.canvas.width;
+                const y = (this.canvas.height - this.gameTime % 200 - i * 10);
+                const size = Math.sin(this.gameTime * 0.01 + i) * 5 + 5;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     updateUI() {
@@ -177,9 +250,20 @@ export class Game {
         this.gameState = 'levelComplete';
         this.playSound('levelComplete');
         
+        // Calculate score multiplier based on level
+        let multiplier = 1;
+        if (this.currentLevel >= 3 && this.currentLevel <= 4) {
+            multiplier = 1.5;
+        } else if (this.currentLevel >= 5) {
+            multiplier = 2;
+        }
+        
+        // Apply multiplier to score
+        const levelScore = Math.round(this.score * multiplier);
+        
         if (this.uiManager) {
             this.uiManager.showLevelComplete(
-                this.score, 
+                levelScore, 
                 this.coinsCollected, 
                 this.totalCoins, 
                 Math.floor(this.gameTime / 60)
@@ -195,7 +279,11 @@ export class Game {
         this.countTotalCoins();
         this.gameTime = 0;
         this.coinsCollected = 0;
+        this.powerup = null;
         this.gameState = 'playing';
+        
+        // Apply difficulty settings again for the new level
+        this.setDifficulty(this.difficulty);
     }
 
     restartGame() {
@@ -212,6 +300,9 @@ export class Game {
         this.player = new Player(this, 50, 300);
         this.initEnemies();
         this.countTotalCoins();
+        
+        // Apply difficulty settings
+        this.setDifficulty(this.difficulty);
         
         this.updateUI();
     }
@@ -287,7 +378,16 @@ export class Game {
 
     collectCoin() {
         this.coinsCollected++;
-        this.score += 100;
+        
+        // Apply score multiplier based on level
+        let multiplier = 1;
+        if (this.currentLevel >= 3 && this.currentLevel <= 4) {
+            multiplier = 1.5;
+        } else if (this.currentLevel >= 5) {
+            multiplier = 2;
+        }
+        
+        this.score += Math.round(100 * multiplier);
         this.updateUI();
         this.playSound('coin');
     }
