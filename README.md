@@ -1,16 +1,35 @@
-# 2D Platformer Game
+# Ninja Adventure - 2D Platformer Game
 
 A fully-featured 2D platformer game built with HTML, CSS, and JavaScript.
 
 ## Features
 
-- Player movement with jumping and gravity
-- Enemies that can be defeated by jumping on them
-- Collectible coins
-- Multiple levels
-- Mobile controls
-- Local storage for high scores
-- Game over screen
+- **Multiple Themed Levels**:
+  - Level 1: Grassland - Tutorial level with basic mechanics
+  - Level 2: Forest - Introduces gaps and vertical platforms
+  - Level 3: Desert Canyon - Features quicksand, cacti, and sandstorms
+
+- **Game Mechanics**:
+  - Player movement with jumping and gravity
+  - Enemies that can be defeated by jumping on them
+  - Collectible coins with score multipliers
+  - Powerups (speed boost, jump boost, invincibility)
+  - Special terrain effects (quicksand slows movement, ice increases sliding)
+  - Checkpoints to save progress within levels
+
+- **User Interface**:
+  - Main menu with options and how-to-play screens
+  - In-game UI showing score, lives, and level
+  - Pause menu with resume, restart, and quit options
+  - Game over and level complete screens
+  - Mobile-friendly controls for touch devices
+
+- **Technical Features**:
+  - Canvas-based rendering with smooth animations
+  - Collision detection for platforms, enemies, and collectibles
+  - Local storage for high scores and settings
+  - Responsive design for different screen sizes
+  - Sound effects and background music with volume controls
 
 ## How to Play
 
@@ -20,65 +39,57 @@ A fully-featured 2D platformer game built with HTML, CSS, and JavaScript.
 4. Avoid or defeat enemies by jumping on them
 5. Reach the flag to complete the level
 
-## Adding Assets
+## Level Progression
 
-The game works with simple shapes drawn on the canvas, but you can enhance it with sprites and sounds:
+### Level 1: Grassland
+- Basic platforming with simple jumps
+- Introduction to coins and enemies
+- Few hazards, ideal for beginners
 
-### Image Assets
+### Level 2: Forest
+- Introduces gaps in the ground
+- Vertical platforming challenges
+- More enemies and obstacles
 
-Place your image files in the `assets/images/` directory:
+### Level 3: Desert Canyon
+- Features quicksand that slows movement
+- Cactus hazards that damage on contact
+- Oasis section with water and checkpoints
+- Sandstorm effects with reduced visibility
+- Canyon climb with vertical ascent
 
-- `player.png` - Player character sprite
-- `enemy.png` - Enemy sprite
-- `tiles.png` - Tileset for ground, bricks, etc.
-- `coin.png` - Coin sprite
-- `flag.png` - Flag sprite
+## Powerups
 
-### Sound Assets
+- **Speed Boost** (Red Bush): Increases player movement speed by 50%
+- **Jump Boost** (Green Bush): Increases jump height by 30%
+- **Invincibility** (Yellow Bush): Temporary immunity to damage
 
-Place your sound files in the `assets/sounds/` directory:
+## Difficulty Settings
 
-- `jump.wav` - Player jump sound
-- `coin.wav` - Coin collection sound
-- `hurt.wav` - Player damage sound
-- `stomp.wav` - Enemy defeat sound
+- **Easy**: 5 lives, higher speed and jump power, slower enemies
+- **Normal**: 3 lives, standard speed and jump power
+- **Hard**: 2 lives, reduced speed and jump power, faster enemies
 
-## Asset Resources
+## Score System
 
-Here are some free resources for platformer game assets:
-
-### Image/Sprite Resources:
-
-- [Itch.io - Free Platformer Sprites](https://itch.io/game-assets/free/genre-platformer/tag-sprites)
-- [OpenGameArt.org - Platformer Characters](https://opengameart.org/content/platformersidescroller-characters-and-enemies)
-- [CraftPix.net - Free 2D Assets](https://craftpix.net/freebies/)
-- [GameArt2D.com - Free Assets](https://www.gameart2d.com/freebies.html)
-
-### Sound Effect Resources:
-
-- [Pixabay - Platformer Sound Effects](https://pixabay.com/sound-effects/search/platformer/)
-- [Mixkit - Free Game Sound Effects](https://mixkit.co/free-sound-effects/game/)
-- [Jeageroni - FREE Retro Action Platformer SFX](https://jeageroni.itch.io/free-action-platformer-sound-effects)
-- [Zapsplat - Game Developer Sounds](https://www.zapsplat.com/sound-effect-category/game-sounds/)
-- [OpenGameArt.org - Library of Game Sounds](https://opengameart.org/content/library-of-game-sounds)
-
-## Hosting
-
-You can host this game for free using GitHub Pages:
-
-1. Push your folder to a GitHub repo
-2. Go to `Settings > Pages`
-3. Select branch as `main` and folder as `/root`
-4. Your game will be live at: `https://your-username.github.io/platformer-game/`
+- Coins: 100 points each
+- Level multipliers: 
+  - Levels 1-2: 1x multiplier
+  - Levels 3-4: 1.5x multiplier
+  - Levels 5+: 2x multiplier
 
 ## Future Enhancements
 
-- Boss enemy with patterns and health bar
-- Weather effects (rain, fog)
-- Level editor
-- Power-ups (speed boost, invincibility, double jump)
-- Procedural level generation
-- Game states (menus, pause screen)
+- Ice Cave level with slippery surfaces and breakable platforms
+- Volcano level with lava hazards and rising lava mechanic
+- Space Station level with low gravity and teleporters
+- Boss battles at the end of each world
+- Level selection screen
+- Character customization
+
+## Credits
+
+Created by Suraj Kumar
 
 ## License
 
