@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ninja Adventure</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- Main Menu -->
+    <div id="mainMenu" class="screen">
+        <div class="menu-content">
+            <h1>Ninja Adventure</h1>
+            <div class="menu-buttons">
+                <button id="playBtn" class="menu-btn">Play Game</button>
+                <button id="optionsBtn" class="menu-btn">Options</button>
+                <button id="howToPlayBtn" class="menu-btn">How to Play</button>
+            </div>
+            <div class="credits">
+                <p>Created by Suraj Kumar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Options Menu -->
+    <div id="optionsMenu" class="screen hidden">
+        <div class="menu-content">
+            <h2>Options</h2>
+            <div class="option-item">
+                <label for="soundVolume">Sound Volume:</label>
+                <input type="range" id="soundVolume" min="0" max="100" value="50">
+                <span id="soundVolumeValue">50%</span>
+            </div>
+            <div class="option-item">
+                <label for="musicVolume">Music Volume:</label>
+                <input type="range" id="musicVolume" min="0" max="100" value="30">
+                <span id="musicVolumeValue">30%</span>
+            </div>
+            <div class="option-item checkbox">
+                <input type="checkbox" id="showFPS" checked>
+                <label for="showFPS">Show FPS</label>
+            </div>
+            <div class="option-item difficulty">
+                <label>Difficulty:</label>
+                <div class="difficulty-options">
+                    <button id="easyBtn" class="difficulty-btn">Easy</button>
+                    <button id="normalBtn" class="difficulty-btn selected">Normal</button>
+                    <button id="hardBtn" class="difficulty-btn">Hard</button>
+                </div>
+            </div>
+            <button id="backFromOptionsBtn" class="menu-btn back-btn">Back</button>
+        </div>
+    </div>
+
+    <!-- How to Play Screen -->
+    <div id="howToPlayMenu" class="screen hidden">
+        <div class="menu-content">
+            <h2>How to Play</h2>
+            <div class="instructions-container">
+                <div class="instruction-item">
+                    <div class="instruction-icon"><i class="fas fa-arrow-left"></i> <i class="fas fa-arrow-right"></i></div>
+                    <div class="instruction-text">Use Arrow Keys to move left and right</div>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon"><i class="fas fa-arrow-up"></i> / <span class="space-key">Space</span></div>
+                    <div class="instruction-text">Press Up Arrow or Space to jump</div>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon"><i class="fas fa-coins"></i></div>
+                    <div class="instruction-text">Collect coins for points</div>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon"><i class="fas fa-skull"></i></div>
+                    <div class="instruction-text">Jump on enemies to defeat them</div>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon"><i class="fas fa-flag"></i></div>
+                    <div class="instruction-text">Reach the flag to complete the level</div>
+                </div>
+            </div>
+            <button id="backFromHowToBtn" class="menu-btn back-btn">Back</button>
+        </div>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pauseMenu" class="screen hidden">
+        <div class="menu-content">
+            <h2>Game Paused</h2>
+            <div class="menu-buttons">
+                <button id="resumeBtn" class="menu-btn">Resume</button>
+                <button id="restartFromPauseBtn" class="menu-btn">Restart</button>
+                <button id="optionsFromPauseBtn" class="menu-btn">Options</button>
+                <button id="quitBtn" class="menu-btn">Quit to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div id="gameContainer" class="hidden">
+        <canvas id="gameCanvas" width="800" height="450"></canvas>
+        <div id="gameUI">
+            <div class="ui-top">
+                <div class="ui-item"><i class="fas fa-coins"></i> <span id="score">0</span></div>
+                <div class="ui-item"><i class="fas fa-heart"></i> <span id="lives">3</span></div>
+                <div class="ui-item"><i class="fas fa-flag"></i> <span id="level">1</span></div>
+                <div class="ui-item fps"><i class="fas fa-tachometer-alt"></i> <span id="fps">60</span></div>
+            </div>
+            <div class="ui-bottom">
+                <button id="pauseBtn" class="ui-btn"><i class="fas fa-pause"></i></button>
+                <div id="powerupIndicator" class="hidden">
+                    <i class="fas fa-bolt"></i> <span id="powerupTimer">0</span>
+                </div>
+            </div>
+        </div>
+        <div id="gameOver" class="hidden">
+            <h2>Game Over!</h2>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <p>High Score: <span id="highScore">0</span></p>
+            <div class="menu-buttons">
+                <button id="restartBtn" class="menu-btn">Play Again</button>
+                <button id="menuFromGameOverBtn" class="menu-btn">Main Menu</button>
+            </div>
+        </div>
+        <div id="levelComplete" class="hidden">
+            <h2>Level Complete!</h2>
+            <div class="level-stats">
+                <p>Score: <span id="levelScore">0</span></p>
+                <p>Coins: <span id="coinsCollected">0</span>/<span id="totalCoins">0</span></p>
+                <p>Time: <span id="levelTime">0</span></p>
+            </div>
+            <div class="menu-buttons">
+                <button id="nextLevelBtn" class="menu-btn">Next Level</button>
+                <button id="menuFromLevelCompleteBtn" class="menu-btn">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Controls -->
+    <div id="mobileControls" class="hidden">
+        <div class="mobile-left">
+            <button class="control-btn" id="leftBtn"><i class="fas fa-arrow-left"></i></button>
+            <button class="control-btn" id="rightBtn"><i class="fas fa-arrow-right"></i></button>
+        </div>
+        <div class="mobile-right">
+            <button class="control-btn" id="jumpBtn"><i class="fas fa-arrow-up"></i></button>
+            <button class="control-btn" id="mobilePauseBtn"><i class="fas fa-pause"></i></button>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
